@@ -33,7 +33,7 @@ ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get(
         'DJANGO_ALLOWED_HOSTS',
-        'webservertransprut-production.up.railway.app,transprut.solutions,localhost',
+        '*',
     ).split(',')
     if host.strip()
 ]
