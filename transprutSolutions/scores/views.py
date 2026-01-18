@@ -29,6 +29,7 @@ def create_score(request):
     return JsonResponse({"status": "ok"}, status=201)
 
 
+
 def list_scores(request):
     entries = ScoreEntry.objects.order_by("-timestamp")
     return render(request, "scores/list.html", {"entries": entries})
