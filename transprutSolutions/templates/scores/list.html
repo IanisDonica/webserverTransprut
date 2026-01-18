@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Score Entries</title>
+  </head>
+  <body>
+    <h1>Score Entries</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Scre</th>
+          <th>Time</th>
+          <th>HP</th>
+          <th>Timestamp</th>
+          <th>IP</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in entries %}
+          <tr>
+            <td>{{ entry.score }}</td>
+            <td>{{ entry.time }}</td>
+            <td>{{ entry.hp }}</td>
+            <td>{{ entry.timestamp }}</td>
+            <td>{{ entry.ip }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5">No scores submitted yet.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
