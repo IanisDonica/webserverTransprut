@@ -1,37 +1,52 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Score Entries</title>
+    <link rel="stylesheet" href="{% static 'scores/styles.css' %}" />
   </head>
   <body>
-    <h1>Score Entries</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>Scre</th>
-          <th>Time</th>
-          <th>HP</th>
-          <th>Timestamp</th>
-          <th>IP</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for entry in entries %}
-          <tr>
-            <td>{{ entry.score }}</td>
-            <td>{{ entry.time }}</td>
-            <td>{{ entry.hp }}</td>
-            <td>{{ entry.timestamp }}</td>
-            <td>{{ entry.ip }}</td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td colspan="5">No scores submitted yet.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <header class="scoreboard-header">
+      <a class="button header-button" href="/">Bck to main page</a>
+      <h1>Scoreboard</h1>
+      <span class="header-spacer" aria-hidden="true"></span>
+    </header>
+    <div class="scoreboard-counter">Logged over {{ total_records }} deliveries, and couting!</div>
+    <main>
+      {% for board in boards %}
+        <section class="card">
+          <div class="card-header">
+            <strong>{{ board.label }}</strong>
+            <span>{{ board.total }} scores</span>
+          </div>
+          <div class="card-body">
+            {% if board.top_score %}
+              <div class="summary">
+                <span>Top score</span>
+                <span class="top-score">{{ board.top_score.score }} · {{ board.top_score.time|floatformat:2 }}s</span>
+              </div>
+              {% for entry in board.other_scores %}
+                <div class="score-row">
+                  <span>{{ entry.score }}</span>
+                  <span>{{ entry.time|floatformat:2 }}s · {{ entry.hp }} HP</span>
+                </div>
+              {% endfor %}
+              <div class="recent">
+                Most recent: {{ board.most_recent.score }} · {{ board.most_recent.time|floatformat:2 }}s
+              </div>
+            {% else %}
+              <div class="empty">No scores submitted yet.</div>
+            {% endif %}
+          </div>
+          <a class="button" href="/api/scores/list/{{ board.level }}/">View all scores</a>
+        </section>
+      {% endfor %}
+    </main>
+    <footer>
+      <span>transprutsolutions @ TUM</span>
+      <a href="https://github.com/IanisDonica/webserverTransprut">See this website's code</a>
+    </footer>
   </body>
 </html>

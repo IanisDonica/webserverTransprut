@@ -1,0 +1,1 @@
+Django webapp for the FOP project. The project is hosted on railway, to run it run `python3 transprutSolutions/manage.py runserver`
