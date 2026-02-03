@@ -19,17 +19,21 @@ def create_score(request):
     if missing:
         return JsonResponse({"error": f"Missing fields: {', '.join(missing)}."}, status=400)
 
+    level = int(payload["level"])
+    if level not in range(1, 6):
+        return JsonResponse({"error": "Level must be between 1 and 5."}, status=400)
+
     ScoreEntry.objects.create(
         score=float(payload["score"]),
         time=float(payload["time"]),
         hp=int(payload["playerHp"]),
-        level=int(payload["level"]),
+        level=level,
     )
 
     return JsonResponse({"status": "ok"}, status=201)
 
 def list_scores(request):
-    levels = [0, 1, 2, 3, 4, 5]
+    levels = [1, 2, 3, 4, 5]
     boards = []
     total_records = 0
     for level in levels:
@@ -40,7 +44,7 @@ def list_scores(request):
         boards.append(
             {
                 "level": level,
-                "label": "Endless Mode" if level == 0 else f"Level {level}",
+                "label": f"Level {level}",
                 "top_score": top_four[0] if top_four else None,
                 "other_scores": top_four[1:],
                 "most_recent": most_recent,
@@ -59,6 +63,9 @@ def list_scores(request):
 
 
 def list_scores_by_level(request, level):
+    if level not in range(1, 6):
+        return JsonResponse({"error": "level shuld be 1-5"}, status=400)
+
     allowed_sorts = {
         "score": "score",
         "time": "time",
@@ -73,7 +80,7 @@ def list_scores_by_level(request, level):
     order_by = f"{sort_prefix}{sort_key}"
 
     entries = ScoreEntry.objects.filter(level=level).order_by(order_by, "-timestamp")
-    label = "Endless Mode" if level == 0 else f"Level {level}"
+    label = f"Level {level}"
     return render(
         request,
         "scores/level_list.html",

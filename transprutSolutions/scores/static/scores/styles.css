@@ -90,13 +90,13 @@ main {
 
 @media (min-width: 1000px) {
   main {
-    margin-left: 25%;
-    margin-right: 25%;
+    margin-left: 10%;
+    margin-right: 10%;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   }
   .table-wrap {
-    margin-left: 25%;
-    margin-right: 25%;
+    margin-left: 10%;
+    margin-right: 10%;
   }
 }
 
