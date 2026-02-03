@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.shortcuts import render
-from django.urls import include, path
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib.staticfiles.views import serve as static_serve
+from django.urls import include, path, re_path
 
 
 def home(request):
@@ -26,4 +29,11 @@ urlpatterns = [
     path('', home, name='home'),
     path('admin/', admin.site.urls),
     path('api/', include('scores.urls')),
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+urlpatterns += [
+    re_path(r"^static/(?P<path>.*)$", static_serve, {"insecure": True}),
 ]

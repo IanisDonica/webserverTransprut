@@ -15,7 +15,7 @@ def create_score(request):
     except json.JSONDecodeError:
         return JsonResponse({"error": "Invalid JSON payload."}, status=400)
 
-    missing = [key for key in ("score", "time", "playerHp") if key not in payload]
+    missing = [key for key in ("score", "time", "playerHp", "level") if key not in payload]
     if missing:
         return JsonResponse({"error": f"Missing fields: {', '.join(missing)}."}, status=400)
 
@@ -23,13 +23,65 @@ def create_score(request):
         score=float(payload["score"]),
         time=float(payload["time"]),
         hp=int(payload["playerHp"]),
-        ip=request.META.get("REMOTE_ADDR", ""),
+        level=int(payload["level"]),
     )
 
     return JsonResponse({"status": "ok"}, status=201)
 
-
-
 def list_scores(request):
-    entries = ScoreEntry.objects.order_by("-timestamp")
-    return render(request, "scores/list.html", {"entries": entries})
+    levels = [0, 1, 2, 3, 4, 5]
+    boards = []
+    total_records = 0
+    for level in levels:
+        base_qs = ScoreEntry.objects.filter(level=level)
+        total_records += base_qs.count()
+        top_four = list(base_qs.order_by("-score", "-timestamp")[:4])
+        most_recent = base_qs.order_by("-timestamp").first()
+        boards.append(
+            {
+                "level": level,
+                "label": "Endless Mode" if level == 0 else f"Level {level}",
+                "top_score": top_four[0] if top_four else None,
+                "other_scores": top_four[1:],
+                "most_recent": most_recent,
+                "total": base_qs.count(),
+            }
+        )
+
+    return render(
+        request,
+        "scores/list.html",
+        {
+            "boards": boards,
+            "total_records": total_records,
+        },
+    )
+
+
+def list_scores_by_level(request, level):
+    allowed_sorts = {
+        "score": "score",
+        "time": "time",
+        "hp": "hp",
+        "timestamp": "timestamp",
+        "level": "level",
+    }
+    sort = request.GET.get("sort", "score")
+    direction = request.GET.get("dir", "desc")
+    sort_key = allowed_sorts.get(sort, "score")
+    sort_prefix = "-" if direction == "desc" else ""
+    order_by = f"{sort_prefix}{sort_key}"
+
+    entries = ScoreEntry.objects.filter(level=level).order_by(order_by, "-timestamp")
+    label = "Endless Mode" if level == 0 else f"Level {level}"
+    return render(
+        request,
+        "scores/level_list.html",
+        {
+            "entries": entries,
+            "level": level,
+            "label": label,
+            "sort": sort_key,
+            "dir": direction,
+        },
+    )

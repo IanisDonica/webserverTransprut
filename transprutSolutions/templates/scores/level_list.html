@@ -1,0 +1,77 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ label }} Scores</title>
+    <link rel="stylesheet" href="{% static 'scores/styles.css' %}" />
+  </head>
+  <body>
+    <header>
+      <h1>{{ label }}</h1>
+      <p class="subtitle">All scores for this leaderboard.</p>
+      <a class="back-link" href="/api/scores/list/">Back to all scoreboards</a>
+    </header>
+    <div class="table-wrap">
+      <section class="card table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>
+                <a href="?sort=score&dir={% if sort == 'score' and dir == 'desc' %}asc{% else %}desc{% endif %}">
+                  Score
+                  {% if sort == 'score' %}
+                    <span class="sort-indicator">{% if dir == 'desc' %}↓{% else %}↑{% endif %}</span>
+                  {% endif %}
+                </a>
+              </th>
+              <th>
+                <a href="?sort=time&dir={% if sort == 'time' and dir == 'desc' %}asc{% else %}desc{% endif %}">
+                  Time
+                  {% if sort == 'time' %}
+                    <span class="sort-indicator">{% if dir == 'desc' %}↓{% else %}↑{% endif %}</span>
+                  {% endif %}
+                </a>
+              </th>
+              <th>
+                <a href="?sort=hp&dir={% if sort == 'hp' and dir == 'desc' %}asc{% else %}desc{% endif %}">
+                  HP
+                  {% if sort == 'hp' %}
+                    <span class="sort-indicator">{% if dir == 'desc' %}↓{% else %}↑{% endif %}</span>
+                  {% endif %}
+                </a>
+              </th>
+              <th>
+                <a href="?sort=timestamp&dir={% if sort == 'timestamp' and dir == 'desc' %}asc{% else %}desc{% endif %}">
+                  Submitted
+                  {% if sort == 'timestamp' %}
+                    <span class="sort-indicator">{% if dir == 'desc' %}↓{% else %}↑{% endif %}</span>
+                  {% endif %}
+                </a>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for entry in entries %}
+              <tr>
+                <td class="score">{{ entry.score }}</td>
+                <td class="time">{{ entry.time|floatformat:2 }}s</td>
+                <td>{{ entry.hp }}</td>
+                <td>{{ entry.timestamp }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td class="empty" colspan="4">No scores submitted yet.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+    </div>
+    <footer>
+      <span>transprutsolutions @ TUM</span>
+      <a href="https://github.com/IanisDonica/webserverTransprut">See this website's code</a>
+    </footer>
+  </body>
+</html>

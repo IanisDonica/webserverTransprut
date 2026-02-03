@@ -1,11 +1,54 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Home</title>
+    <link rel="stylesheet" href="{% static 'scores/styles.css' %}" />
   </head>
   <body>
-    <a href="/api/scores/list/">Scores</a>
+    <header class="scoreboard-header">
+      <a class="button header-button" href="/api/scores/list/">Scores</a>
+      <h1>Midnight Rider</h1>
+      <span class="header-spacer" aria-hidden="true"></span>
+    </header>
+    <div class="home">
+      <section class="card home-card">
+        <div class="card-header home-header">
+          <strong>Rules and Story</strong>
+        </div>
+        <div class="card-body">
+          <p>
+            You play a as courier in the concrete jungle maze known as Bucharest, delivering for glovo
+            in order to try and make some extra money for a holiday abroad. In the city you have to
+            battle with bad infastructure (Potholes that will kill you), horible and unpredictible
+            (BMW) drivers that will do nothing to avoid killing you directly or indirectly (through
+            explosions from car crashes), and corupt police trying to get your paycheck as a bribe.
+            The player cannot directly kill the enemies (but can get them to kill themselves), this
+            is left for the player to figure out.
+          </p>
+          <p>
+            The game has 2 modes, Endless and Campain. In general the player must pick up a delivery
+            (key), the arrow will point to it if not picked up, and then take it to a drop-off point
+            (DropOff). In Campaign, the drop-off grants permission to leave (can-leave), and the
+            ExitDoor ends the level once can-leave is active. In Endless, the loop is: key (delivery)
+            → drop-off → new key (delivery), repeating forever. The arrow tracks the current target,
+            in endless the player also has a small map on to show him the area where he must go (to
+            make it less frustrating). During the gameplay loop, the player is targeted by policeman,
+            bad infastructure (potholes) and BMW drivers that try to kill or bancrupt him, Potholes
+            and BMW driver collisions result in an instant death, explostions will knock the player
+            back and policemen will arrest the player if he runs out of bride money (HP). In Endless
+            mode, dificualty scales over time: spawns accelerate the longer you survive, so the map
+            gradually fills with more threats. The delivery timer adapts to player skill, finishing a
+            delivery quickly reduces the next time limit more, while slower completions reduce it less.
+          </p>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>transprutsolutions @ TUM</span>
+      <a href="https://github.com/IanisDonica/webserverTransprut">See this website's code</a>
+    </footer>
   </body>
 </html>

@@ -1,0 +1,1 @@
+TransprutSolutions is a Django app. `webserver/` holds settings and URLs; `scores/` is the leaderboard app (models, views, urls) with templates in `templates/` and static assets in `scores/static/`. `manage.py` runs the project, and `db.sqlite3` stores data.
